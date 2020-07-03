@@ -1,5 +1,5 @@
 module.exports = {
-  // pathPrefix: '/blog',
+  pathPrefix: '/blog',
   siteMetadata: {
     title: `TimC | Just keep going`,
     name: `張庭頤(Tim Chang)`,
