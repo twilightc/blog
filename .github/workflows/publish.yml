@@ -31,6 +31,7 @@ jobs:
 
       #Also can use JamesIves/github-pages-deploy-action@releases/v3 here
       #It depends on you
+      #Instead push -f, you may need gut pull --rebase
       - name: deploy
         run: |
           cd $PUBSLISH_DIR
@@ -42,4 +43,5 @@ jobs:
           git checkout -b gh-pages
           git add .
           git commit -m "deploy to gh-pages branch"
-          git push -u origin gh-pages
+          git push -u origin gh-pages -f
+          echo 🤘 publish to gitpage process complete.
