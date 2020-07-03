@@ -22,7 +22,7 @@ jobs:
       - name: Use Nodejs ${{matrix.node_version}}
         uses: actions/setup-node@v1
         with:
-          version: ${{version.node_version}}
+          version: ${{matrix.node_version}}
 
       - name: install and build
         run: |
