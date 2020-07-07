@@ -1,6 +1,6 @@
 ---
 title: 創站紀念
-slug: beginning
+slug: beginning-20200701
 author: 張庭頤(Tim Chang)
 date: 2020-07-01
 hero: ./images/photo-1.jpg

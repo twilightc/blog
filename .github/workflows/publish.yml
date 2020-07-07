@@ -1,47 +1,46 @@
-name: publish to gitpage
+# name: publish to gitpage
 
-on:
-  push:
-    branches:
-      - master
+# on:
+#   push:
+#     branches:
+#       - master
 
-jobs:
-  build-and-deploy:
-    env:
-      MY_SECRET: ${{ secrets.ACCESS_TOKEN }}
-      BRANCH: gh-pages
-      USER_NAME: twilightc
-      USER_EMAIL: timmyc2007@gmail.com
-      PUBSLISH_DIR: ./public
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node_version: [10, 12]
-    steps:
-      - uses: actions/checkout@v2
-      - name: Use Nodejs ${{matrix.node_version}}
-        uses: actions/setup-node@v1
-        with:
-          version: ${{matrix.node_version}}
+# jobs:
+#   build-and-deploy:
+#     env:
+#       MY_SECRET: ${{ secrets.ACCESS_TOKEN }}
+#       BRANCH: gh-pages
+#       USER_NAME: twilightc
+#       USER_EMAIL: timmyc2007@gmail.com
+#       PUBSLISH_DIR: ./public
+#     runs-on: ubuntu-latest
+#     strategy:
+#       matrix:
+#         node_version: [10, 12]
+#     steps:
+#       - uses: actions/checkout@v2
+#       - name: Use Nodejs ${{matrix.node_version}}
+#         uses: actions/setup-node@v1
+#         with:
+#           version: ${{matrix.node_version}}
 
-      - name: install and build
-        run: |
-          npm install
-          npm run build
+#       - name: install and build
+#         run: |
+#           npm install
+#           npm run build
 
-      #Also can use JamesIves/github-pages-deploy-action@releases/v3 here
-      #It depends on you
-      #Instead push -f, you may need gut pull --rebase
-      - name: deploy
-        run: |
-          cd $PUBSLISH_DIR
-          git init
-          git config --local user.name $USER_NAME
-          git config --local user.email $USER_EMAIL
-          git status
-          git remote add origin https://$MY_SECRET@github.com/$GITHUB_REPOSITORY.git
-          git checkout -b gh-pages
-          git add .
-          git commit -m "deploy to gh-pages branch"
-          git push -u origin gh-pages -f
-          echo 🤘 publish to gitpage process complete.
+#Also can use JamesIves/github-pages-deploy-action@releases/v3 here
+#It depends on you
+# - name: deploy
+#   run: |
+#     cd $PUBSLISH_DIR
+#     git init
+#     git config --local user.name $USER_NAME
+#     git config --local user.email $USER_EMAIL
+#     git status
+#     git remote add origin https://$MY_SECRET@github.com/$GITHUB_REPOSITORY.git
+#     git checkout -b gh-pages
+#     git add .
+#     git commit -m "deploy to gh-pages branch"
+#     git push -u origin gh-pages -f
+#     echo 🤘 publish to gitpage process complete.
