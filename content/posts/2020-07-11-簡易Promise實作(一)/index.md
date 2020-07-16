@@ -4,7 +4,7 @@ slug: promise-implementation-part-one-20200711
 author: 張庭頤(Tim Chang)
 date: 2020-07-11
 hero: ./images/photo-1484417894907-623942c8ee29.jpg
-excerpt: 製作簡易的promise
+excerpt: 從零到能夠做出一個簡易的promise
 ---
 
 由於 post 頁面的 datamodel 沒有看到參數是能直接塞標題圖片描述的，因此我之後都會將文章標題圖片出處放在參考資料後，基本上都是取自 unsplash。
@@ -65,13 +65,15 @@ asd();
   <img src="./images/result.jpg" alt="MyPromise Result" />
 </div>
 
-這個實作我會分成兩篇寫完，一方面是我的腳步可以放慢一點，同時我覺得這種文全部塞在一篇裡，最常見的就是看到一半按下上一頁，不過這也不能講什麼，因為我的敘事能力有限。
+這個實作我會分成兩篇寫完，一方面是我的腳步可以放慢一點，同時我覺得這種文全部塞在一篇裡，最常見的就是看到一半按下上一頁，這樣子對讀者及作者而言都是損失。
 
 在開始前還是要先做個提醒，本篇可能不適合沒有 es6 promise 使用經驗的人觀看；當然，如果你是因為失眠之類的原因而四處遊蕩，在巧合當中來到這裡，那或許你找對地方了，應該看個幾分鐘，你的眼皮就會大腦達成協議，拉下鐵捲門結束本日營業。
 
 ---
 
-如果底下有不太清楚的部分，尤其是名詞，可以試著翻閱[promise/A+規範筆記](https://twilightc.github.io/blog/promise-a-plus-20200707)，我會盡量做到裡面提及的規範。
+如果底下有不太清楚的部分，尤其是名詞，可以試著翻閱[promise/A+規範筆記](https://twilightc.github.io/blog/promise-a-plus-20200707)。
+
+這篇是讓想接觸 promise 實作的人有個概念，因此下方的實作過程並不會全然照著 promise/A+做；如果想直接一窺符合所有規範的 promise 大概長什麼樣子，請參考[簡易 Promise 實作(二)](https://twilightc.github.io/blog/promise-implementation-part-two-20200716)的文末。
 
 我們從一個會印出傳入 data 的函數當作起點，先看一下 thenable ，一個具有 then method 的 object/function 是什麼意思：
 
@@ -199,7 +201,7 @@ setTimeout(() => {
 }, 1500);
 ```
 
-這邊建立 promise 的方式調整成這樣，執行時可以發現，以目前這個結構，在還沒 resolve 前，只會印出**yee start**，因為 callback 只有一個，印出 first start 的 function 會被印出 yee start 的 function 給覆蓋掉，因此後續的實作上，我們必須要把這個 callback 改成陣列，儲存所有要 resolve 的 value。
+這邊建立 promise 測資的方式調整成這樣。執行時可以發現，在還沒 resolve 前，只會印出**yee start**，因為 callback 只有一個，印出 first start 的 function 會被印出 yee start 的 function 給覆蓋掉，因此後續的實作上，我們必須要把這個 callback 改成陣列，儲存所有要 resolve 的 value。
 
 如果還維持
 
@@ -226,7 +228,7 @@ class MyPromise {
     const resolve = (newValue) => {
       this.state = 'fulfilled';
       this.value = newValue;
-      if (this.resolveHandler.length) {
+      if (this.resolveHandler.length !== 0) {
         this.resolveHandler.forEach((handler) => {
           handler(this.value);
         });
@@ -324,7 +326,7 @@ then(onFulfilled) {
   <img src="./images/result-pchian-explain2.jpg" alt="Promise chain explain" />
 </div>
 
-待會提到的 pending 部分也是一樣的道理，首先 resolve 將狀態轉變，並且儲存初始 value ，紅字 start 給<span style="color:#008000" >`this.value`</span>後，下一次呼叫 then，時，首先就會把上一次的<span style="color:#008000" >`this.value`</span>傳入函式執行(綠字 start)，得到該函式的回傳值(紅字 5 )，接著再次儲存狀態與數值；重複這個循環直到該 promise 沒有再被呼叫 then 為止。
+待會提到的 pending 部分也是一樣的道理，首先 start()當中回傳的新 promise， <span style="color:#008000" >`resolve('start')`</span> 將狀態轉變，並且儲存初始 value ，紅字 start 給<span style="color:#008000" >`this.value`</span>後，下一次呼叫 then，時，首先就會把上一次的<span style="color:#008000" >`this.value`</span>傳入函式執行(綠字 start)，得到該函式的回傳值(紅字 5 )，接著再次儲存狀態與數值；重複這個循環直到該 promise 沒有再被呼叫 then 為止。
 
 為什麼上一段是提到狀態，而非明確指出是 fulfilled 或者 rejected？想像一下，如果是回傳一個全新的 promise ，又或者是 then 當中函數執行時出了什麼問題導致 error，你就無法保證下一個 then 接到的到底是 fulfilled 還是 rejected，所以這邊只用狀態稱呼。
 
@@ -338,7 +340,7 @@ then(onFulfilled) {
   <img src="./images/result-pchian-explain1.jpg" alt="Promise chain explain" />
 </div>
 
-你還好嗎？如果覺得理解困難的話去喝水思考一下吧，當然你要點上一頁我也沒辦法阻止啦...
+你還好嗎？如果覺得理解困難的話去喝水思考一下吧，適度休息，並且再次分析，應該會對理解整個 promise 的概念會有更好的幫助。
 
 ---
 
@@ -358,14 +360,13 @@ const resolve = (newValue) => {
   if (newValue === this) {
     throw new TypeError('cannot resolve itself.');
   }
-  if (newValue != null && typeof newValue.then === 'function') {
+  if (newValue instanceof MyPromise) {
     newValue.then(resolve);
     return;
   }
   this.state = 'fulfilled';
   this.value = newValue;
   if (this.resolveHandler.length !== 0) {
-    console.log(this.resolveHandler.length);
     this.resolveHandler.forEach((handler) => {
       handler(this.value);
     });
@@ -420,6 +421,10 @@ then(onFulfilled) {
 
 第三點的話，由於 onFulfilled 是外部傳入，我們沒有辦法知道外部程式碼是否正確無誤，因此需要做一個保護；換句話說，**這處理了 callback 的 IOC(inversion of control)導致的 trust issue**；因為我們還沒做 reject 的部份，所以先用註解意思意思一下。
 
+你可能還會有疑問，根據第三點，我們需要用 try catch 來預防 onFulfilled 拋出例外，那麽 pending 時，放入 resolveHndler 的 onFulfilled 就不用這樣做嗎？
+
+其實是要的，不過我為了好理解，所以暫時只加上為 fulfilled 時的 try catch，下一篇我們會把 pending 的部分也補齊。
+
 到這一步，你已經可以使用以下測資：
 
 ```javascript
@@ -472,3 +477,5 @@ start()
 ### 使用圖片:
 
 title image:&emsp;[photo by Emile Perron on unsplash](https://unsplash.com/photos/xrVDYZRGdw4)
+
+state transition:&emsp;[What is the correct terminology for javascript promises](https://stackoverflow.com/questions/29268569/what-is-the-correct-terminology-for-javascript-promises)
