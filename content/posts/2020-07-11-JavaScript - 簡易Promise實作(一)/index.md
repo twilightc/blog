@@ -1,6 +1,6 @@
 ---
-title: 簡易Promise實作(一)
-slug: promise-implementation-part-one-20200711
+title: JavaScript - 簡易Promise實作(一)
+slug: javascript-promise-implementation-part-one-20200711
 author: 張庭頤(Tim Chang)
 date: 2020-07-11
 hero: ./images/photo-1484417894907-623942c8ee29.jpg
@@ -15,7 +15,7 @@ excerpt: 從零到能夠做出一個簡易的promise
 
 ```javascript
 function start() {
-  return new myPromise((resolve, reject) => {
+  return new MyPromise((resolve, reject) => {
     setTimeout(() => {
       resolve('start');
     }, 2000);
@@ -59,7 +59,7 @@ async function asd() {
 asd();
 ```
 
-會得到這樣的結果：
+會得到這樣的結果，跟你寫 javascript 時使用 promise 是很相似的：
 
 <div className="Image__Medium">
   <img src="./images/result.jpg" alt="MyPromise Result" />
@@ -419,11 +419,11 @@ then(onFulfilled) {
 
 第二點就是規範(onFulfilled 若非函數則忽略 value)，如果不清楚的話可以看我筆記的第三點。
 
-第三點的話，由於 onFulfilled 是外部傳入，我們沒有辦法知道外部程式碼是否正確無誤，因此需要做一個保護；換句話說，**這處理了 callback 的 IOC(inversion of control)導致的 trust issue**；因為我們還沒做 reject 的部份，所以先用註解意思意思一下。
+第三點的話，由於 onFulfilled 可能是外部傳入，我們沒有辦法知道外部程式碼是否正確無誤，因此需要做一個保護；換句話說，**這處理了 callback 的 IOC(inversion of control)導致的 trust issue**；因為我們還沒做 reject 的部份，所以先用註解意思意思一下。
 
-你可能還會有疑問，根據第三點，我們需要用 try catch 來預防 onFulfilled 拋出例外，那麽 pending 時，放入 resolveHndler 的 onFulfilled 就不用這樣做嗎？
+你或許還有疑問，根據第三點，我們需要用 try catch 來預防 onFulfilled 拋出例外，那麽 pending 時，放入 resolveHndler 的 onFulfilled 就不用這樣做嗎？
 
-其實是要的，不過我為了好理解，所以暫時只加上為 fulfilled 時的 try catch，下一篇我們會把 pending 的部分也補齊。
+其實是要的，不過為了好理解，所以暫時只加上為 fulfilled 時的 try catch，下一篇我們會把 pending 的部分也補齊。
 
 到這一步，你已經可以使用以下測資：
 

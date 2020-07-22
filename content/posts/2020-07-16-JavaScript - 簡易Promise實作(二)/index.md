@@ -1,6 +1,6 @@
 ---
-title: 簡易Promise實作(二)
-slug: promise-implementation-part-two-20200716
+title: JavaScript - 簡易Promise實作(二)
+slug: javascript-promise-implementation-part-two-20200716
 author: 張庭頤(Tim Chang)
 date: 2020-07-16
 hero: ./images/claudio-schwarz-purzlbaum-i25aqE_YUZs-unsplash.jpg
@@ -408,7 +408,7 @@ module.exports = MyPromise;
 
 基本上，最大的差異就是那個 resolveProcedure(對應規範 2.3 節)，完整實作這點規範，我們才能確保不同人做的 promise 可以互用；等等，promise 有多到需要確保可以互相使用嗎？
 
-有的，雖然我們現在用的大多都是 2015 年，es6 訂定的 native promise，但其實還有像是 jquery 的 deferred object 跟 angularjs 的 $q 之類，在 es6 誕生前就出現的 promiselike object，若你哪天被迫交互使用這些玩意時，確保可以互用這點就幫大忙了－－大概啦。
+有的，雖然我們現在用的大多都是 2015 年，es6 訂定的 native promise，但其實還有像是 jquery 的 deferred object 跟 angularjs 的 \$q 之類，在 es6 誕生前就出現的 promiselike object，若你哪天被迫交互使用這些玩意時，確保可以互用這點就幫大忙了－－大概啦。
 
 謝謝你看完這篇長文，如果有什麼困難或問題可以留言告訴我。
 
